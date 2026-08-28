@@ -39,11 +39,13 @@ Paso 11 Apagar el sistema / reiniciar desde cero
 |---|---|---|
 | Docker Desktop / Docker Engine | 28.3.3 | `docker --version` |
 | Docker Compose (plugin v2) | v2.39.2 | `docker compose version` |
-| Python | 3.13.7 (mínimo compatible: 3.11) | `python --version` (Windows) / `python3 --version` (Linux/macOS) |
+| Python | 3.13.7 (mínimo compatible: 3.12) | `python --version` (Windows) / `python3 --version` (Linux/macOS) |
 | Git | Versión reciente, sin requisito específico | `git --version` |
 | Puertos libres en el host | 5433, 8000, 8501 (ver Paso 3.1 y solución de problemas) | Ver Paso 0.2 |
 
 **Nota sobre `python` vs `python3`:** en Windows, el comando `python` invoca Python 3 si está correctamente instalado. En Linux y macOS, `python` puede no existir o apuntar a Python 2; use `python3` y `pip3` en esos sistemas si `python`/`pip` fallan.
+
+**Nota sobre `docker compose` vs `docker-compose`:** esta guía usa `docker compose` (sin guion, plugin v2, incluido en Docker Desktop y versiones recientes de Docker Engine). En sistemas con Docker más antiguo (Docker Engine anterior a 20.10 con plugin separado, o distribuciones que instalan solo la herramienta standalone), puede estar disponible únicamente como `docker-compose` (con guion, v1). Verificar con `docker compose version` primero; si falla, usar `docker-compose` en su lugar. No obstante, ambas sintaxis son funcionalmente equivalentes para los comandos de esta guía.
 
 ### Paso 0.1. Verificación de que Docker se encuentra en ejecución
 
@@ -311,6 +313,15 @@ python -m venv venv
 # Linux / macOS
 python3 -m venv venv
 ```
+
+En distribuciones Debian/Ubuntu (incluyendo derivadas como OSGeoLive), el módulo `venv` puede no estar incluido por defecto junto con el intérprete de Python. Si aparece el error `The virtual environment was not created successfully because ensurepip is not available`, instalar el paquete correspondiente a la versión de Python en uso antes de reintentar (ajustar `3.12` a la versión real si difiere):
+
+```bash
+sudo apt update
+sudo apt install python3.12-venv
+```
+
+Luego repetir `python3 -m venv venv`.
 
 ### Paso 4.2. Activación
 
