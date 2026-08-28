@@ -1,0 +1,19 @@
+# Entorno y credenciales
+.env
+venv/
+.venv/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Streamlit
+.streamlit/
+
+# Logs
+*.log
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
