@@ -455,14 +455,19 @@ La ejecución con índice reduce el tiempo observado de 62,372 ms a 0,666 ms sob
 
 ## 9. Testing
 
-Se implementaron **15 pruebas unitarias con `pytest`** para validar de forma aislada las reglas de negocio asociadas al cálculo de autonomía, evaluación de geocercas y generación de alertas. Las pruebas se ejecutan sin dependencia de una instancia activa de PostgreSQL, utilizando implementaciones equivalentes en Python para las operaciones espaciales y los cálculos evaluados en la base de datos.
+Se implementaron **16 pruebas con `pytest`**: 15 pruebas unitarias que validan de forma aislada las reglas de negocio asociadas al cálculo de autonomía, evaluación de geocercas y generación de alertas (sin dependencia de una instancia activa de PostgreSQL, mediante implementaciones equivalentes en Python), y 1 prueba de integración que verifica el comportamiento real del trigger contra la base de datos.
 
 - **`tests/test_fuel_prediction.py`** (6 pruebas): valida el cálculo `autonomy_km = (fuel_level / 100) × 400` para diferentes niveles de combustible y verifica el comportamiento del umbral de 100 km, incluyendo el caso límite en el que la autonomía es exactamente igual al umbral y, por tanto, no genera alerta.
 
 - **`tests/test_geofences.py`** (5 pruebas): valida la pertenencia espacial mediante `Point.within(Polygon)`, equivalente a `ST_Within` para esta lógica, incluyendo puntos dentro, fuera y sobre el límite de la geometría.
 
 - **`tests/test_speed_validation.py`** (4 pruebas): valida la generación de alertas según la relación entre `speed_kmh` y `max_speed_kmh`, incluyendo velocidades inferiores, iguales y superiores al límite establecido por la geocerca.
+
+
+- **`tests/test_integration_trigger.py`** (1 prueba): verifica el comportamiento del trigger `process_telemetry_alerts()` contra una instancia real de PostgreSQL, es decir, inserta un punto de telemetría dentro de una geocerca de alto riesgo con velocidad superior al límite, y confirma que el trigger genera automáticamente la alerta correspondiente en `speed_alerts` con el `excess_kmh` correcto. A diferencia de los 15 tests anteriores (que validan la lógica de negocio replicada en Python), este test verifica el comportamiento real del motor de base de datos, incluyendo la detección espacial vía `ST_Within` y la ejecución del trigger en la transacción. Requiere que el contenedor de PostgreSQL esté activo (`docker compose up -d`).
 ---
+
+
 
 ## 10. Trade-offs de rendimiento para Big Data
 
