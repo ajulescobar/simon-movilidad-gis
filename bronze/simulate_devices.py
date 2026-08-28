@@ -2,6 +2,7 @@ import time
 import random
 import requests
 from route_generator import generate_route
+from datetime import datetime, timedelta, timezone
 
 API_URL = "http://127.0.0.1:8000/telemetry"
 
@@ -62,6 +63,8 @@ def simulate_vehicle(vehicle, report_interval_seconds=2):
     route = route_result["route"]
     print(f"   Ruta obtenida vía: {route_result['route_source']} ({len(route)} puntos)")
 
+    start_time = datetime.now(timezone.utc) - timedelta(seconds=report_interval_seconds * len(route))
+
     fuel = vehicle["fuel_start"]
     fuel_decrement = (fuel / len(route)) * 0.3
 
@@ -71,12 +74,14 @@ def simulate_vehicle(vehicle, report_interval_seconds=2):
         speed = generate_realistic_speed(is_first_point=(i == 0))
         fuel = max(fuel - fuel_decrement, 0)
 
+        point_timestamp = start_time + timedelta(seconds=report_interval_seconds * i)
         payload = {
             "vehicle_id": vehicle_id,
             "latitude": curr_point[0],
             "longitude": curr_point[1],
             "speed_kmh": round(speed, 2),
             "fuel_level": round(fuel, 2),
+            "reported_at": point_timestamp.isoformat(),
         }
 
         try:

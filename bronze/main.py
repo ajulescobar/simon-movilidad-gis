@@ -15,11 +15,12 @@ def receive_telemetry(packet: TelemetryPacket):
             cur.execute(
                 """
                 INSERT INTO raw_telemetry (vehicle_id, reported_at, speed_kmh, fuel_level, geom)
-                VALUES (%s, NOW(), %s, %s, ST_SetSRID(ST_MakePoint(%s, %s), 4326))
+                VALUES (%s, COALESCE(%s, NOW()), %s, %s, ST_SetSRID(ST_MakePoint(%s, %s), 4326))
                 RETURNING id;
                 """,
                 (
                     packet.vehicle_id,
+                    packet.reported_at,
                     packet.speed_kmh,
                     packet.fuel_level,
                     packet.longitude,
