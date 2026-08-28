@@ -160,6 +160,8 @@ GRANT SELECT ON telemetry_masked TO gis_readonly;
 ```
 El enmascaramiento se implementa en la capa de base de datos mediante **vistas** y **roles**, separando el acceso a los datos originales de su exposición. El rol `gis_readonly` únicamente puede consultar `telemetry_masked`, mientras que `gis_admin` mantiene acceso a `raw_telemetry`. Se validó que `gis_readonly` no puede consultar directamente `raw_telemetry`, recibiendo un error de permisos al intentar acceder a la tabla.
 
+**Nota de seguridad:** las contraseñas de los roles `gis_admin` y `gis_readonly` están escritas en texto plano en los scripts de inicialización, con valores simples (`admin_pass123`, `readonly_pass123`). Esto es aceptable en este contexto porque el contenedor es exclusivamente local, sin exposición a internet, y cualquiera que despliegue el proyecto crea su propia instancia aislada. No se gestionan vía `.env` porque PostgreSQL no interpola variables de entorno dentro de archivos `.sql` ejecutados por `docker-entrypoint-initdb.d`; en un entorno de producción real, esto se resolvería con una plantilla procesada (`envsubst`) o un gestor de secretos.
+
 ### 4.5 Simulación de flota y generación de rutas
 
 Se implementó un simulador de telemetría que genera recorridos sobre rutas geográficas realistas dentro de Cali. Las rutas principales se obtienen mediante **OSRM (Open Source Routing Machine)**, utilizando la geometría GeoJSON retornada por el servicio para obtener los puntos que siguen el trazado de la red vial. A continuación, se presenta la implementación de esta lógica de negocio por simulación:
