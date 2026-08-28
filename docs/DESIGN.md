@@ -394,6 +394,8 @@ Las consultas a PostgreSQL utilizan `@st.cache_data(ttl=30)` para evitar ejecuci
 
 Las geocercas se obtienen desde PostGIS mediante `ST_AsGeoJSON(geom)` y se incorporan como una capa independiente. Su representación diferenciada por `zone_type` permite contrastar visualmente la posición de los vehículos y los eventos detectados con respecto a las zonas configuradas.
 
+A diferencia de la API (sección 4.3), el dashboard abre y cierra una conexión por cada función de carga de datos, sin pool de conexiones. En este sentido, cada conexión se cierra correctamente tras su uso (sin fuga de recursos), y el patrón de carga de un dashboard de un solo usuario por sesión no genera la concurrencia que justificaría el costo adicional de un pool.
+
 ## 8. Optimización de consultas e índices espaciales
 
 La consulta espacial principal del sistema relaciona los registros de `raw_telemetry` con las geocercas mediante `ST_Within`. Para evaluar el comportamiento del índice espacial, se comparó el plan de ejecución con el índice `GiST` habilitado frente a una ejecución sin utilizar índices espaciales.
