@@ -1,4 +1,4 @@
-# Simón Movilidad — Sistema de Telemetría GIS
+# Simón Movilidad - Sistema de Telemetría GIS
 
 Pipeline de datos geoespaciales para telemetría vehicular (GPS/IoT) en tiempo real, con arquitectura de tres capas (Bronce, Plata, Oro) sobre PostgreSQL + PostGIS. Detecta automáticamente infracciones de velocidad y alertas de combustible mediante triggers, y expone los resultados en un tablero interactivo de Business Intelligence.
 
