@@ -83,7 +83,7 @@ Si alguno de estos comandos devuelve un proceso activo en esos puertos, existe u
 ## Paso 1. Clonación del repositorio
 
 ```bash
-git clone <URL_DEL_REPOSITORIO>
+git clone https://github.com/ajulescobar/simon-movilidad-gis.git
 cd simon-movilidad-gis
 ```
 
